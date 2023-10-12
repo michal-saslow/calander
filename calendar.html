@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://axios-http.com"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        axios.get("https://localhost:7165/api/Events").then(res =>{
+        console.log(res.data);
+        var calendarEl = document.getElementById("calendar");
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+          events : res.data,
+        });
+        calendar.render();
+      });
+    });
+    </script>
+    <script>
+      function addEvent(){
+        axios.post("https://localhost:7165/api/Events",{      
+          "title": document.getElementById("txt").value ,
+          "start": document.getElementById("date").value
+        }).then(res =>{
+          console.log(res.data);
+        })
+      }
+      function removeEvent(){
+        tmp=document.getElementById("in1").value;
+        axios.delete("https://localhost:7165/api/Events/"+tmp).then(res =>{
+          console.log(res.data);
+        });
+        document.getElementById("p").innerText=" ";
+      }
+      function updateEvent(){
+        tmp=document.getElementById("in2").value;
+        axios.put("https://localhost:7165/api/Events/"+tmp,{
+          "title": document.getElementById("txt2").value ,
+          "start": document.getElementById("date2").value
+        })
+        document.getElementById("p2").innerText=" ";
+      }
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function(){
+              axios.get("https://localhost:7165/api/Events").then(res => {
+              var calendarEl= document.getElementById("calendar");
+              var calendar = new FullCalendar.Calendar(calendarEl,{
+                  initialView:"dayGridMonth",
+                  events: res.data,
+              });
+              calendar.render();
+            });
+         });
+    </script>
+    <script>
+      function getEvents(){
+        axios.get("https://localhost:7165/api/Events").then(res =>{
+          events=res.data;
+          if(res.status!=200)
+            console.log(res.status);
+          events.forEach(element => {
+            console.log(element);
+            document.getElementById("p").innerHTML+="<p>"+element.id+" "+element.title+"</p>"
+          });
+        });
+      }
+      function getEvents2(){
+        axios.get("https://localhost:7165/api/Events").then(res =>{
+          events=res.data;
+          if(res.status!=200)
+            console.log(res.status);
+            events.forEach(element => {
+            console.log(element);
+            document.getElementById("p2").innerHTML+="<p>"+element.id+" "+element.title+"</p>"
+          });
+        });
+      }
+    </script>
+  </head>
+  <body dir="rtl">
+    <div style="display: flex;justify-content: space-between;">
+    <div style="border:solid;border-color: chartreuse;height: 120px;width: 30%;text-align: center;">
+    <p></p>
+    <p>הוספת אירוע</p>
+    <label>כותרת</label>
+    <input type="text" id="txt"/>
+    <label>תאריך</label>
+    <input type="date" id="date"/>
+    <p></p>
+    <input onclick="addEvent()" type="button" value="הוספה"/>
+    </div>
+    <div style="border:solid;border-color: chartreuse;height: 120px;width: 20%;text-align: center;">
+      <p></p>
+      <p>מחיקת ארוע</p>
+        <input type="button" value="להצגת כל הארועים" onclick="getEvents()"/>
+        <p></p>
+        <label>הכנס id</label>
+        <input style="width: 5%;" type="text" id="in1"/>
+        <input type="button" value="מחיקה" onclick="removeEvent()"/>
+        <div id="p"></div>
+    </div>
+    <div style="border:solid;border-color: chartreuse;height: 120px;width: 40%;text-align: center;">
+      <p></p>
+      <p>עדכון ארוע</p>
+        <input type="button" value="להצגת כל הארועים" onclick="getEvents2()"/>
+       <p></p>
+        <label>הכנס id</label>
+        <input style="width: 3%;" type="text" id="in2"/>
+        <label>כותרת</label>
+        <input type="text" id="txt2"/>
+        <label>תאריך</label>
+        <input type="date" id="date2"/>
+        <input type="button" value="עדכן" onclick="updateEvent()">
+        <div id="p2"></div>
+    </div>
+    </div>
+  </div>
+    <p></p>
+    <div id='calendar'></div>
+  </body>
+</html>

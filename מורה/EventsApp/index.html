@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <button onclick="getEvents()">Get Events</button>
+    <button onclick="addEvent()">Add Events</button>
+    <button onclick="updateEvent()">Update Events</button>
+    <button onclick="deleteEvent()">Delete Events</button>
+    <button onload="deleteEvent()">Delete Events</button>
+
+    <script>
+        function getEvents() {
+            axios.get("https://localhost:7161/api/Events").then(res => {
+                if (res.status != 200) {
+                    console.log('error!!')
+                } else {
+                    console.log(res.data);
+                }
+            })
+        }
+
+        function addEvent() {
+            axios.post("https://eventsapi.onrender.com/api/Events", {
+                "title": "new event from js",
+                "start": "2023-09-06"
+            }).then(res => {
+                console.log(res.data)
+            })
+        }
+
+        function deleteEvent() {
+            let id = 1;
+            axios.delete(`https://eventsapi.onrender.com/api/Events/${id}`).then(res => {
+                console.log(res.data)
+            })
+        }
+
+        function updateEvent() {
+            let id = 1;
+            axios.put(`https://eventsapi.onrender.com/api/Events/${id}`, {
+                "title": "update from js",
+                "start": "2023-09-10"
+            }).then(res => {
+                console.log(res.data);
+            })
+        }
+    </script>
+</body>
+
+</html>
